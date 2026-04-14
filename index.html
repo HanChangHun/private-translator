@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Whisper Translate — 100% 온디바이스 번역기</title>
+<meta name="description" content="당신의 글은 절대 서버로 전송되지 않습니다. 브라우저 안에서 GPU로 직접 돌아가는 프라이빗 AI 번역기." />
+<style>
+  :root {
+    --bg: #0b0c10;
+    --panel: #14161d;
+    --panel-2: #1c1f29;
+    --border: #2a2e3a;
+    --text: #f3f4f6;
+    --muted: #9aa0aa;
+    --accent: #7c5cff;
+    --accent-2: #00e0c7;
+    --good: #22c55e;
+    --warn: #f59e0b;
+    --bad: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-2); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.hero {
+    text-align: center;
+    padding: 40px 0 28px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: rgba(124, 92, 255, 0.12);
+    border: 1px solid rgba(124, 92, 255, 0.35);
+    color: #c9bcff;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
+  h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    line-height: 1.15;
+    margin: 16px 0 12px;
+    letter-spacing: -0.02em;
+  }
+  h1 .grad {
+    background: linear-gradient(90deg, #7c5cff, #00e0c7);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: clamp(14px, 1.6vw, 17px);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .pillars {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    margin-top: 18px;
+  }
+  .pill {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+  .pill b { color: var(--text); font-weight: 600; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 24px;
+  }
+
+  .toolbar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .toolbar select, .toolbar button {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .toolbar select:focus, .toolbar button:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .swap-btn {
+    width: 40px; height: 40px;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 !important;
+  }
+  .grow { flex: 1; }
+  .device-tag {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 6px 10px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .device-tag .indicator {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); margin-right: 6px; vertical-align: middle;
+  }
+  .device-tag.gpu .indicator { background: var(--good); box-shadow: 0 0 6px var(--good); }
+  .device-tag.cpu .indicator { background: var(--warn); }
+
+  .panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 720px) { .panes { grid-template-columns: 1fr; } }
+  .pane {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex; flex-direction: column;
+    min-height: 220px;
+  }
+  .pane header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--muted);
+  }
+  .pane textarea {
+    flex: 1;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: none;
+    resize: none;
+    padding: 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.55;
+    min-height: 200px;
+  }
+  .pane .out {
+    flex: 1;
+    padding: 14px;
+    font-size: 16px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    color: var(--text);
+    overflow: auto;
+  }
+  .out.placeholder { color: var(--muted); }
+  .pane footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .copy-btn {
+    background: transparent; color: var(--muted); border: 0; cursor: pointer;
+    font-size: 12px; padding: 4px 6px;
+  }
+  .copy-btn:hover { color: var(--text); }
+
+  .actions {
+    margin-top: 14px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .primary {
+    background: linear-gradient(90deg, #7c5cff, #00e0c7);
+    color: #0b0c10;
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .primary:disabled { opacity: 0.55; cursor: not-allowed; }
+  .secondary {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  .status {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    min-height: 20px;
+  }
+  .progress {
+    margin-top: 8px;
+    height: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    display: none;
+  }
+  .progress.show { display: block; }
+  .progress > div {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #7c5cff, #00e0c7);
+    transition: width 0.2s ease;
+  }
+
+  .features {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .features { grid-template-columns: 1fr; } }
+  .feat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .feat .icon { font-size: 22px; margin-bottom: 8px; }
+  .feat h3 { margin: 4px 0 6px; font-size: 16px; }
+  .feat p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+
+  footer.foot {
+    margin-top: 56px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="hero">
+      <span class="badge"><span class="dot"></span>100% ON-DEVICE · 서버 0대</span>
+      <h1>당신의 문장은<br/><span class="grad">절대 서버로 가지 않습니다.</span></h1>
+      <p class="sub">
+        브라우저 안에서 GPU로 직접 돌아가는 프라이빗 AI 번역기.<br/>
+        기밀 문서, 개인 일기, 회사 메시지 — 인터넷이 끊겨도 번역이 됩니다.
+      </p>
+      <div class="pillars">
+        <span class="pill"><b>WebGPU</b> 가속</span>
+        <span class="pill"><b>오프라인</b> 동작</span>
+        <span class="pill"><b>0건</b> 서버 전송</span>
+        <span class="pill"><b>200개 언어</b> 지원 모델</span>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="toolbar">
+        <select id="src">
+          <option value="kor_Hang">한국어</option>
+          <option value="eng_Latn">English</option>
+          <option value="jpn_Jpan">日本語</option>
+          <option value="zho_Hans">中文(简)</option>
+          <option value="spa_Latn">Español</option>
+          <option value="fra_Latn">Français</option>
+          <option value="deu_Latn">Deutsch</option>
+          <option value="vie_Latn">Tiếng Việt</option>
+        </select>
+
+        <button class="swap-btn" id="swap" title="언어 바꾸기" aria-label="언어 바꾸기">⇄</button>
+
+        <select id="tgt">
+          <option value="eng_Latn">English</option>
+          <option value="kor_Hang">한국어</option>
+          <option value="jpn_Jpan">日本語</option>
+          <option value="zho_Hans">中文(简)</option>
+          <option value="spa_Latn">Español</option>
+          <option value="fra_Latn">Français</option>
+          <option value="deu_Latn">Deutsch</option>
+          <option value="vie_Latn">Tiếng Việt</option>
+        </select>
+
+        <span class="grow"></span>
+
+        <span id="device" class="device-tag"><span class="indicator"></span><span id="deviceLabel">디바이스 확인 중…</span></span>
+      </div>
+
+      <div class="panes">
+        <div class="pane">
+          <header><span>입력</span><span id="srcCount">0</span></header>
+          <textarea id="input" placeholder="번역할 문장을 입력하세요. 이 글은 당신의 기기에서만 처리됩니다."></textarea>
+          <footer>
+            <span>로컬 처리됨</span>
+            <button class="copy-btn" id="clearBtn">지우기</button>
+          </footer>
+        </div>
+        <div class="pane">
+          <header><span>번역</span><span id="latency"></span></header>
+          <div class="out placeholder" id="output">번역 결과가 여기에 표시됩니다.</div>
+          <footer>
+            <span>서버 전송 없음</span>
+            <button class="copy-btn" id="copyBtn">복사</button>
+          </footer>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="run" class="primary" disabled>모델 준비 중…</button>
+        <button id="loadBtn" class="secondary">모델 미리 받기</button>
+      </div>
+
+      <div class="status" id="status">처음 한 번만 모델을 다운로드하면, 이후로는 인터넷 없이도 동작합니다.</div>
+      <div class="progress" id="progress"><div></div></div>
+    </section>
+
+    <section class="features">
+      <div class="feat">
+        <div class="icon">🛡️</div>
+        <h3>완전한 프라이버시</h3>
+        <p>입력한 문장은 네트워크로 단 한 글자도 나가지 않습니다. 브라우저 메모리 안에서만 처리됩니다.</p>
+      </div>
+      <div class="feat">
+        <div class="icon">⚡</div>
+        <h3>WebGPU 가속</h3>
+        <p>당신 컴퓨터의 GPU를 직접 사용해 추론합니다. 서버 왕복 지연이 없습니다.</p>
+      </div>
+      <div class="feat">
+        <div class="icon">✈️</div>
+        <h3>오프라인 동작</h3>
+        <p>모델을 한 번 받으면 비행기 모드에서도 그대로 번역할 수 있습니다.</p>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU<br/>
+      이 페이지에는 어떤 분석/추적 스크립트도 들어있지 않습니다.</p>
+    </footer>
+  </div>
+
+<script type="module">
+import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2";
+
+// 사용자 기기 캐시(IndexedDB)에 모델 보관 → 두 번째 방문부터는 오프라인 가능
+env.allowLocalModels = false;
+env.useBrowserCache = true;
+
+const $ = (id) => document.getElementById(id);
+const input = $("input");
+const output = $("output");
+const runBtn = $("run");
+const loadBtn = $("loadBtn");
+const swapBtn = $("swap");
+const srcSel = $("src");
+const tgtSel = $("tgt");
+const status = $("status");
+const progressBox = $("progress");
+const progressBar = progressBox.querySelector("div");
+const deviceTag = $("device");
+const deviceLabel = $("deviceLabel");
+const srcCount = $("srcCount");
+const latencyEl = $("latency");
+const copyBtn = $("copyBtn");
+const clearBtn = $("clearBtn");
+
+let translator = null;
+let loading = false;
+let device = "wasm"; // 기본 fallback
+
+// 1) WebGPU 지원 여부 감지
+async function detectDevice() {
+  try {
+    if (!("gpu" in navigator)) throw new Error("no webgpu");
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) throw new Error("no adapter");
+    device = "webgpu";
+    deviceTag.classList.add("gpu");
+    deviceLabel.textContent = "WebGPU 가속";
+  } catch (e) {
+    device = "wasm";
+    deviceTag.classList.add("cpu");
+    deviceLabel.textContent = "CPU (WebGPU 미지원)";
+  }
+}
+
+// 2) 모델 로드 (지연 로드)
+async function loadModel() {
+  if (translator || loading) return translator;
+  loading = true;
+  runBtn.disabled = true;
+  loadBtn.disabled = true;
+  progressBox.classList.add("show");
+  status.textContent = "모델을 다운로드 중입니다… (처음 한 번만)";
+
+  try {
+    translator = await pipeline(
+      "translation",
+      "Xenova/nllb-200-distilled-600M",
+      {
+        device,
+        dtype: device === "webgpu" ? "q8" : "q8",
+        progress_callback: (p) => {
+          if (p.status === "progress" && typeof p.progress === "number") {
+            progressBar.style.width = p.progress.toFixed(1) + "%";
+            const mb = p.loaded ? (p.loaded / 1024 / 1024).toFixed(1) : "";
+            const total = p.total ? (p.total / 1024 / 1024).toFixed(1) : "";
+            status.textContent = `다운로드 중… ${mb}MB / ${total}MB`;
+          } else if (p.status === "done") {
+            status.textContent = `${p.file} 준비 완료`;
+          } else if (p.status === "ready") {
+            status.textContent = "모델 준비 완료. 이제부터는 오프라인에서도 동작합니다.";
+          }
+        },
+      }
+    );
+    progressBar.style.width = "100%";
+    runBtn.disabled = false;
+    runBtn.textContent = "번역하기";
+    loadBtn.style.display = "none";
+    status.textContent = "준비 완료. 이제 입력한 글은 절대 외부로 나가지 않습니다.";
+  } catch (e) {
+    console.error(e);
+    status.textContent = "모델을 불러오지 못했습니다: " + (e?.message || e);
+    runBtn.disabled = false;
+    runBtn.textContent = "다시 시도";
+  } finally {
+    loading = false;
+    loadBtn.disabled = false;
+    setTimeout(() => progressBox.classList.remove("show"), 600);
+  }
+}
+
+// 3) 번역 실행
+async function translate() {
+  const text = input.value.trim();
+  if (!text) return;
+  if (!translator) await loadModel();
+  if (!translator) return;
+
+  runBtn.disabled = true;
+  runBtn.textContent = "번역 중…";
+  output.classList.remove("placeholder");
+  output.textContent = "…";
+
+  const t0 = performance.now();
+  try {
+    const result = await translator(text, {
+      src_lang: srcSel.value,
+      tgt_lang: tgtSel.value,
+    });
+    const out = Array.isArray(result) ? result[0]?.translation_text : result?.translation_text;
+    output.textContent = out || "(빈 결과)";
+    const ms = Math.round(performance.now() - t0);
+    latencyEl.textContent = `${ms} ms · 로컬`;
+  } catch (e) {
+    console.error(e);
+    output.textContent = "오류: " + (e?.message || e);
+  } finally {
+    runBtn.disabled = false;
+    runBtn.textContent = "번역하기";
+  }
+}
+
+// 4) 이벤트 바인딩
+runBtn.addEventListener("click", translate);
+loadBtn.addEventListener("click", loadModel);
+swapBtn.addEventListener("click", () => {
+  const a = srcSel.value, b = tgtSel.value;
+  srcSel.value = b; tgtSel.value = a;
+  // 입력/출력도 스왑
+  const t = input.value;
+  input.value = output.classList.contains("placeholder") ? "" : output.textContent;
+  if (t) { output.textContent = t; output.classList.remove("placeholder"); }
+  updateCount();
+});
+input.addEventListener("input", updateCount);
+input.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); translate(); }
+});
+copyBtn.addEventListener("click", async () => {
+  if (output.classList.contains("placeholder")) return;
+  try { await navigator.clipboard.writeText(output.textContent); copyBtn.textContent = "복사됨!"; setTimeout(()=>copyBtn.textContent="복사", 1200); } catch {}
+});
+clearBtn.addEventListener("click", () => { input.value = ""; updateCount(); input.focus(); });
+function updateCount() { srcCount.textContent = input.value.length; }
+
+// 5) 부팅
+(async () => {
+  await detectDevice();
+  runBtn.disabled = false;
+  runBtn.textContent = "번역하기 (모델 자동 로드)";
+})();
+</script>
+</body>
+</html>
