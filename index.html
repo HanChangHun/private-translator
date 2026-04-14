@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Whisper Translate — 100% 온디바이스 번역기</title>
-<meta name="description" content="당신의 글은 절대 서버로 전송되지 않습니다. 브라우저 안에서 GPU로 직접 돌아가는 프라이빗 AI 번역기." />
+<title data-i18n="meta.title">Whisper Translate — 100% On-Device Translator</title>
+<meta name="description" data-i18n-attr="content" data-i18n="meta.desc"
+      content="Your text never leaves your browser. A private AI translator running on your GPU via WebGPU." />
 <style>
   :root {
     --bg: #0b0c10;
@@ -24,14 +25,45 @@
     margin: 0; padding: 0;
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Pretendard", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
   a { color: var(--accent-2); }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  .topbar {
+    display: flex; justify-content: flex-end; align-items: center;
+    gap: 8px;
+  }
+  .lang-toggle {
+    display: inline-flex;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .lang-toggle button {
+    background: transparent;
+    color: var(--muted);
+    border: 0;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .lang-toggle button.active {
+    background: var(--panel-2);
+    color: var(--text);
+  }
+  .lang-toggle button:focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+
   header.hero {
     text-align: center;
-    padding: 40px 0 28px;
+    padding: 28px 0 28px;
   }
   .badge {
     display: inline-flex; align-items: center; gap: 8px;
@@ -255,41 +287,51 @@
 <body>
   <div class="wrap">
 
+    <div class="topbar">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button data-lang="en" class="active">EN</button>
+        <button data-lang="ko">한국어</button>
+      </div>
+    </div>
+
     <header class="hero">
-      <span class="badge"><span class="dot"></span>100% ON-DEVICE · 서버 0대</span>
-      <h1>당신의 문장은<br/><span class="grad">절대 서버로 가지 않습니다.</span></h1>
-      <p class="sub">
-        브라우저 안에서 GPU로 직접 돌아가는 프라이빗 AI 번역기.<br/>
-        기밀 문서, 개인 일기, 회사 메시지 — 인터넷이 끊겨도 번역이 됩니다.
+      <span class="badge"><span class="dot"></span><span data-i18n="hero.badge">100% ON-DEVICE · 0 SERVERS</span></span>
+      <h1>
+        <span data-i18n="hero.title.l1">Your text</span><br/>
+        <span class="grad" data-i18n="hero.title.l2">never leaves your browser.</span>
+      </h1>
+      <p class="sub" data-i18n="hero.sub" data-i18n-html="1">
+        A private AI translator running on your own GPU, right inside the browser.<br/>
+        Confidential docs, personal notes, work messages — it even works offline.
       </p>
       <div class="pillars">
-        <span class="pill"><b>WebGPU</b> 가속</span>
-        <span class="pill"><b>오프라인</b> 동작</span>
-        <span class="pill"><b>0건</b> 서버 전송</span>
-        <span class="pill"><b>200개 언어</b> 지원 모델</span>
+        <span class="pill" data-i18n="hero.pill.gpu" data-i18n-html="1"><b>WebGPU</b> accelerated</span>
+        <span class="pill" data-i18n="hero.pill.offline" data-i18n-html="1"><b>Offline</b> capable</span>
+        <span class="pill" data-i18n="hero.pill.zero" data-i18n-html="1"><b>0 bytes</b> sent to a server</span>
+        <span class="pill" data-i18n="hero.pill.langs" data-i18n-html="1"><b>200 languages</b> supported</span>
       </div>
     </header>
 
     <section class="card">
       <div class="toolbar">
         <select id="src">
-          <option value="kor_Hang">한국어</option>
           <option value="eng_Latn">English</option>
+          <option value="kor_Hang">한국어</option>
           <option value="jpn_Jpan">日本語</option>
-          <option value="zho_Hans">中文(简)</option>
+          <option value="zho_Hans">中文 (简)</option>
           <option value="spa_Latn">Español</option>
           <option value="fra_Latn">Français</option>
           <option value="deu_Latn">Deutsch</option>
           <option value="vie_Latn">Tiếng Việt</option>
         </select>
 
-        <button class="swap-btn" id="swap" title="언어 바꾸기" aria-label="언어 바꾸기">⇄</button>
+        <button class="swap-btn" id="swap" data-i18n-attr="title aria-label" data-i18n="ui.swap" title="Swap languages" aria-label="Swap languages">⇄</button>
 
         <select id="tgt">
-          <option value="eng_Latn">English</option>
           <option value="kor_Hang">한국어</option>
+          <option value="eng_Latn">English</option>
           <option value="jpn_Jpan">日本語</option>
-          <option value="zho_Hans">中文(简)</option>
+          <option value="zho_Hans">中文 (简)</option>
           <option value="spa_Latn">Español</option>
           <option value="fra_Latn">Français</option>
           <option value="deu_Latn">Deutsch</option>
@@ -298,68 +340,204 @@
 
         <span class="grow"></span>
 
-        <span id="device" class="device-tag"><span class="indicator"></span><span id="deviceLabel">디바이스 확인 중…</span></span>
+        <span id="device" class="device-tag"><span class="indicator"></span><span id="deviceLabel" data-i18n="ui.deviceChecking">Checking device…</span></span>
       </div>
 
       <div class="panes">
         <div class="pane">
-          <header><span>입력</span><span id="srcCount">0</span></header>
-          <textarea id="input" placeholder="번역할 문장을 입력하세요. 이 글은 당신의 기기에서만 처리됩니다."></textarea>
+          <header><span data-i18n="ui.input">Input</span><span id="srcCount">0</span></header>
+          <textarea id="input" data-i18n-attr="placeholder" data-i18n="ui.inputPlaceholder"
+            placeholder="Type something to translate. This text never leaves your device."></textarea>
           <footer>
-            <span>로컬 처리됨</span>
-            <button class="copy-btn" id="clearBtn">지우기</button>
+            <span data-i18n="ui.processedLocally">Processed locally</span>
+            <button class="copy-btn" id="clearBtn" data-i18n="ui.clear">Clear</button>
           </footer>
         </div>
         <div class="pane">
-          <header><span>번역</span><span id="latency"></span></header>
-          <div class="out placeholder" id="output">번역 결과가 여기에 표시됩니다.</div>
+          <header><span data-i18n="ui.output">Translation</span><span id="latency"></span></header>
+          <div class="out placeholder" id="output" data-i18n="ui.outputPlaceholder">Your translation will appear here.</div>
           <footer>
-            <span>서버 전송 없음</span>
-            <button class="copy-btn" id="copyBtn">복사</button>
+            <span data-i18n="ui.noNetwork">No network used</span>
+            <button class="copy-btn" id="copyBtn" data-i18n="ui.copy">Copy</button>
           </footer>
         </div>
       </div>
 
       <div class="actions">
-        <button id="run" class="primary" disabled>모델 준비 중…</button>
-        <button id="loadBtn" class="secondary">모델 미리 받기</button>
+        <button id="run" class="primary" disabled data-i18n="ui.runLoading">Loading model…</button>
+        <button id="loadBtn" class="secondary" data-i18n="ui.preload">Preload model</button>
       </div>
 
-      <div class="status" id="status">처음 한 번만 모델을 다운로드하면, 이후로는 인터넷 없이도 동작합니다.</div>
+      <div class="status" id="status" data-i18n="ui.statusInitial">The model downloads once. After that it works without an internet connection.</div>
       <div class="progress" id="progress"><div></div></div>
     </section>
 
     <section class="features">
       <div class="feat">
         <div class="icon">🛡️</div>
-        <h3>완전한 프라이버시</h3>
-        <p>입력한 문장은 네트워크로 단 한 글자도 나가지 않습니다. 브라우저 메모리 안에서만 처리됩니다.</p>
+        <h3 data-i18n="feat.privacy.title">Total privacy</h3>
+        <p data-i18n="feat.privacy.desc">Not a single character is sent over the network. Everything happens in your browser's memory.</p>
       </div>
       <div class="feat">
         <div class="icon">⚡</div>
-        <h3>WebGPU 가속</h3>
-        <p>당신 컴퓨터의 GPU를 직접 사용해 추론합니다. 서버 왕복 지연이 없습니다.</p>
+        <h3 data-i18n="feat.speed.title">WebGPU acceleration</h3>
+        <p data-i18n="feat.speed.desc">Runs directly on your computer's GPU. No round-trip latency to a server.</p>
       </div>
       <div class="feat">
         <div class="icon">✈️</div>
-        <h3>오프라인 동작</h3>
-        <p>모델을 한 번 받으면 비행기 모드에서도 그대로 번역할 수 있습니다.</p>
+        <h3 data-i18n="feat.offline.title">Works offline</h3>
+        <p data-i18n="feat.offline.desc">Once the model is cached, you can translate from a plane, a tunnel, or anywhere with no connection.</p>
       </div>
     </section>
 
     <footer class="foot">
-      <p>Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU<br/>
-      이 페이지에는 어떤 분석/추적 스크립트도 들어있지 않습니다.</p>
+      <p data-i18n="foot.line1" data-i18n-html="1">
+        Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU
+      </p>
+      <p data-i18n="foot.line2">This page contains zero analytics or tracking scripts.</p>
     </footer>
   </div>
 
 <script type="module">
 import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2";
 
-// 사용자 기기 캐시(IndexedDB)에 모델 보관 → 두 번째 방문부터는 오프라인 가능
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
+// ====== i18n ======
+const STR = {
+  en: {
+    "meta.title": "Whisper Translate — 100% On-Device Translator",
+    "meta.desc": "Your text never leaves your browser. A private AI translator running on your GPU via WebGPU.",
+    "hero.badge": "100% ON-DEVICE · 0 SERVERS",
+    "hero.title.l1": "Your text",
+    "hero.title.l2": "never leaves your browser.",
+    "hero.sub": "A private AI translator running on your own GPU, right inside the browser.<br/>Confidential docs, personal notes, work messages — it even works offline.",
+    "hero.pill.gpu": "<b>WebGPU</b> accelerated",
+    "hero.pill.offline": "<b>Offline</b> capable",
+    "hero.pill.zero": "<b>0 bytes</b> sent to a server",
+    "hero.pill.langs": "<b>200 languages</b> supported",
+    "ui.swap": "Swap languages",
+    "ui.deviceChecking": "Checking device…",
+    "ui.deviceGPU": "WebGPU accelerated",
+    "ui.deviceCPU": "CPU (WebGPU unavailable)",
+    "ui.input": "Input",
+    "ui.output": "Translation",
+    "ui.inputPlaceholder": "Type something to translate. This text never leaves your device.",
+    "ui.outputPlaceholder": "Your translation will appear here.",
+    "ui.processedLocally": "Processed locally",
+    "ui.noNetwork": "No network used",
+    "ui.clear": "Clear",
+    "ui.copy": "Copy",
+    "ui.copied": "Copied!",
+    "ui.runLoading": "Loading model…",
+    "ui.runReady": "Translate (auto-loads model)",
+    "ui.runDoing": "Translating…",
+    "ui.run": "Translate",
+    "ui.preload": "Preload model",
+    "ui.statusInitial": "The model downloads once. After that it works without an internet connection.",
+    "ui.statusDownloading": "Downloading model… (one-time)",
+    "ui.statusProgress": (loaded, total) => `Downloading… ${loaded} MB / ${total} MB`,
+    "ui.statusReady": "Ready. From now on, your text never leaves this device.",
+    "ui.statusError": (msg) => `Could not load the model: ${msg}`,
+    "ui.retry": "Retry",
+    "ui.latency": (ms) => `${ms} ms · local`,
+    "feat.privacy.title": "Total privacy",
+    "feat.privacy.desc": "Not a single character is sent over the network. Everything happens in your browser's memory.",
+    "feat.speed.title": "WebGPU acceleration",
+    "feat.speed.desc": "Runs directly on your computer's GPU. No round-trip latency to a server.",
+    "feat.offline.title": "Works offline",
+    "feat.offline.desc": "Once the model is cached, you can translate from a plane, a tunnel, or anywhere with no connection.",
+    "foot.line1": "Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU",
+    "foot.line2": "This page contains zero analytics or tracking scripts.",
+  },
+  ko: {
+    "meta.title": "Whisper Translate — 100% 온디바이스 번역기",
+    "meta.desc": "당신의 글은 절대 서버로 전송되지 않습니다. 브라우저 안에서 GPU로 직접 돌아가는 프라이빗 AI 번역기.",
+    "hero.badge": "100% ON-DEVICE · 서버 0대",
+    "hero.title.l1": "당신의 문장은",
+    "hero.title.l2": "절대 서버로 가지 않습니다.",
+    "hero.sub": "브라우저 안에서 당신의 GPU로 직접 돌아가는 프라이빗 AI 번역기.<br/>기밀 문서, 개인 일기, 회사 메시지 — 인터넷이 끊겨도 동작합니다.",
+    "hero.pill.gpu": "<b>WebGPU</b> 가속",
+    "hero.pill.offline": "<b>오프라인</b> 동작",
+    "hero.pill.zero": "<b>0건</b> 서버 전송",
+    "hero.pill.langs": "<b>200개 언어</b> 지원",
+    "ui.swap": "언어 바꾸기",
+    "ui.deviceChecking": "디바이스 확인 중…",
+    "ui.deviceGPU": "WebGPU 가속",
+    "ui.deviceCPU": "CPU (WebGPU 미지원)",
+    "ui.input": "입력",
+    "ui.output": "번역",
+    "ui.inputPlaceholder": "번역할 문장을 입력하세요. 이 글은 당신의 기기에서만 처리됩니다.",
+    "ui.outputPlaceholder": "번역 결과가 여기에 표시됩니다.",
+    "ui.processedLocally": "로컬 처리됨",
+    "ui.noNetwork": "서버 전송 없음",
+    "ui.clear": "지우기",
+    "ui.copy": "복사",
+    "ui.copied": "복사됨!",
+    "ui.runLoading": "모델 준비 중…",
+    "ui.runReady": "번역하기 (모델 자동 로드)",
+    "ui.runDoing": "번역 중…",
+    "ui.run": "번역하기",
+    "ui.preload": "모델 미리 받기",
+    "ui.statusInitial": "처음 한 번만 모델을 다운로드하면, 이후로는 인터넷 없이도 동작합니다.",
+    "ui.statusDownloading": "모델을 다운로드 중입니다… (처음 한 번만)",
+    "ui.statusProgress": (loaded, total) => `다운로드 중… ${loaded}MB / ${total}MB`,
+    "ui.statusReady": "준비 완료. 이제부터는 입력한 글이 절대 외부로 나가지 않습니다.",
+    "ui.statusError": (msg) => `모델을 불러오지 못했습니다: ${msg}`,
+    "ui.retry": "다시 시도",
+    "ui.latency": (ms) => `${ms} ms · 로컬`,
+    "feat.privacy.title": "완전한 프라이버시",
+    "feat.privacy.desc": "입력한 문장은 네트워크로 단 한 글자도 나가지 않습니다. 브라우저 메모리 안에서만 처리됩니다.",
+    "feat.speed.title": "WebGPU 가속",
+    "feat.speed.desc": "당신 컴퓨터의 GPU를 직접 사용해 추론합니다. 서버 왕복 지연이 없습니다.",
+    "feat.offline.title": "오프라인 동작",
+    "feat.offline.desc": "모델을 한 번 받으면 비행기 모드에서도 그대로 번역할 수 있습니다.",
+    "foot.line1": "Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU",
+    "foot.line2": "이 페이지에는 어떤 분석/추적 스크립트도 들어있지 않습니다.",
+  },
+};
+
+let LANG = "en";
+function t(key, ...args) {
+  const v = STR[LANG]?.[key] ?? STR.en[key] ?? key;
+  return typeof v === "function" ? v(...args) : v;
+}
+function applyI18n() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const attr = el.getAttribute("data-i18n-attr");
+    const isHtml = el.getAttribute("data-i18n-html") === "1";
+    const val = t(key);
+    if (attr) {
+      attr.split(/\s+/).forEach((a) => el.setAttribute(a, val));
+    } else if (isHtml) {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  });
+  // Re-render dynamic chrome
+  if (deviceTag.classList.contains("gpu")) deviceLabel.textContent = t("ui.deviceGPU");
+  else if (deviceTag.classList.contains("cpu")) deviceLabel.textContent = t("ui.deviceCPU");
+  // Re-render run button if not actively translating / loading
+  if (!loading && !translating) {
+    runBtn.textContent = translator ? t("ui.run") : t("ui.runReady");
+  }
+  // Highlight active toggle
+  document.querySelectorAll(".lang-toggle button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.lang === LANG);
+  });
+}
+function setLang(lang) {
+  if (!STR[lang]) return;
+  LANG = lang;
+  try { localStorage.setItem("wt.lang", lang); } catch {}
+  applyI18n();
+}
+
+// ====== DOM refs ======
 const $ = (id) => document.getElementById(id);
 const input = $("input");
 const output = $("output");
@@ -380,9 +558,10 @@ const clearBtn = $("clearBtn");
 
 let translator = null;
 let loading = false;
-let device = "wasm"; // 기본 fallback
+let translating = false;
+let device = "wasm";
 
-// 1) WebGPU 지원 여부 감지
+// ====== WebGPU detection ======
 async function detectDevice() {
   try {
     if (!("gpu" in navigator)) throw new Error("no webgpu");
@@ -390,22 +569,22 @@ async function detectDevice() {
     if (!adapter) throw new Error("no adapter");
     device = "webgpu";
     deviceTag.classList.add("gpu");
-    deviceLabel.textContent = "WebGPU 가속";
+    deviceLabel.textContent = t("ui.deviceGPU");
   } catch (e) {
     device = "wasm";
     deviceTag.classList.add("cpu");
-    deviceLabel.textContent = "CPU (WebGPU 미지원)";
+    deviceLabel.textContent = t("ui.deviceCPU");
   }
 }
 
-// 2) 모델 로드 (지연 로드)
+// ====== Model load ======
 async function loadModel() {
   if (translator || loading) return translator;
   loading = true;
   runBtn.disabled = true;
   loadBtn.disabled = true;
   progressBox.classList.add("show");
-  status.textContent = "모델을 다운로드 중입니다… (처음 한 번만)";
+  status.textContent = t("ui.statusDownloading");
 
   try {
     translator = await pipeline(
@@ -413,31 +592,27 @@ async function loadModel() {
       "Xenova/nllb-200-distilled-600M",
       {
         device,
-        dtype: device === "webgpu" ? "q8" : "q8",
+        dtype: "q8",
         progress_callback: (p) => {
           if (p.status === "progress" && typeof p.progress === "number") {
             progressBar.style.width = p.progress.toFixed(1) + "%";
-            const mb = p.loaded ? (p.loaded / 1024 / 1024).toFixed(1) : "";
-            const total = p.total ? (p.total / 1024 / 1024).toFixed(1) : "";
-            status.textContent = `다운로드 중… ${mb}MB / ${total}MB`;
-          } else if (p.status === "done") {
-            status.textContent = `${p.file} 준비 완료`;
-          } else if (p.status === "ready") {
-            status.textContent = "모델 준비 완료. 이제부터는 오프라인에서도 동작합니다.";
+            const mb = p.loaded ? (p.loaded / 1024 / 1024).toFixed(1) : "0";
+            const total = p.total ? (p.total / 1024 / 1024).toFixed(1) : "?";
+            status.textContent = t("ui.statusProgress", mb, total);
           }
         },
       }
     );
     progressBar.style.width = "100%";
     runBtn.disabled = false;
-    runBtn.textContent = "번역하기";
+    runBtn.textContent = t("ui.run");
     loadBtn.style.display = "none";
-    status.textContent = "준비 완료. 이제 입력한 글은 절대 외부로 나가지 않습니다.";
+    status.textContent = t("ui.statusReady");
   } catch (e) {
     console.error(e);
-    status.textContent = "모델을 불러오지 못했습니다: " + (e?.message || e);
+    status.textContent = t("ui.statusError", e?.message || String(e));
     runBtn.disabled = false;
-    runBtn.textContent = "다시 시도";
+    runBtn.textContent = t("ui.retry");
   } finally {
     loading = false;
     loadBtn.disabled = false;
@@ -445,15 +620,16 @@ async function loadModel() {
   }
 }
 
-// 3) 번역 실행
+// ====== Translate ======
 async function translate() {
   const text = input.value.trim();
   if (!text) return;
   if (!translator) await loadModel();
   if (!translator) return;
 
+  translating = true;
   runBtn.disabled = true;
-  runBtn.textContent = "번역 중…";
+  runBtn.textContent = t("ui.runDoing");
   output.classList.remove("placeholder");
   output.textContent = "…";
 
@@ -464,28 +640,29 @@ async function translate() {
       tgt_lang: tgtSel.value,
     });
     const out = Array.isArray(result) ? result[0]?.translation_text : result?.translation_text;
-    output.textContent = out || "(빈 결과)";
+    output.textContent = out || "(empty)";
     const ms = Math.round(performance.now() - t0);
-    latencyEl.textContent = `${ms} ms · 로컬`;
+    latencyEl.textContent = t("ui.latency", ms);
   } catch (e) {
     console.error(e);
-    output.textContent = "오류: " + (e?.message || e);
+    output.textContent = "Error: " + (e?.message || e);
   } finally {
+    translating = false;
     runBtn.disabled = false;
-    runBtn.textContent = "번역하기";
+    runBtn.textContent = t("ui.run");
   }
 }
 
-// 4) 이벤트 바인딩
+// ====== Events ======
 runBtn.addEventListener("click", translate);
 loadBtn.addEventListener("click", loadModel);
 swapBtn.addEventListener("click", () => {
   const a = srcSel.value, b = tgtSel.value;
   srcSel.value = b; tgtSel.value = a;
-  // 입력/출력도 스왑
-  const t = input.value;
-  input.value = output.classList.contains("placeholder") ? "" : output.textContent;
-  if (t) { output.textContent = t; output.classList.remove("placeholder"); }
+  const txt = input.value;
+  const isPlaceholder = output.classList.contains("placeholder");
+  input.value = isPlaceholder ? "" : output.textContent;
+  if (txt) { output.textContent = txt; output.classList.remove("placeholder"); }
   updateCount();
 });
 input.addEventListener("input", updateCount);
@@ -494,16 +671,37 @@ input.addEventListener("keydown", (e) => {
 });
 copyBtn.addEventListener("click", async () => {
   if (output.classList.contains("placeholder")) return;
-  try { await navigator.clipboard.writeText(output.textContent); copyBtn.textContent = "복사됨!"; setTimeout(()=>copyBtn.textContent="복사", 1200); } catch {}
+  try {
+    await navigator.clipboard.writeText(output.textContent);
+    copyBtn.textContent = t("ui.copied");
+    setTimeout(() => copyBtn.textContent = t("ui.copy"), 1200);
+  } catch {}
 });
 clearBtn.addEventListener("click", () => { input.value = ""; updateCount(); input.focus(); });
 function updateCount() { srcCount.textContent = input.value.length; }
 
-// 5) 부팅
+// Language toggle
+document.querySelectorAll(".lang-toggle button").forEach((btn) => {
+  btn.addEventListener("click", () => setLang(btn.dataset.lang));
+});
+
+// ====== Boot ======
 (async () => {
+  // Pick initial language: stored > navigator > 'en'
+  let initial = "en";
+  try {
+    const stored = localStorage.getItem("wt.lang");
+    if (stored && STR[stored]) initial = stored;
+    else if ((navigator.language || "").toLowerCase().startsWith("ko")) initial = "ko";
+  } catch {}
+  // Pick sensible default source/target based on language
+  if (initial === "ko") { srcSel.value = "kor_Hang"; tgtSel.value = "eng_Latn"; }
+  else { srcSel.value = "eng_Latn"; tgtSel.value = "kor_Hang"; }
+
+  setLang(initial);
   await detectDevice();
   runBtn.disabled = false;
-  runBtn.textContent = "번역하기 (모델 자동 로드)";
+  runBtn.textContent = t("ui.runReady");
 })();
 </script>
 </body>
