@@ -301,41 +301,51 @@
         <span class="grad" data-i18n="hero.title.l2">never leaves your browser.</span>
       </h1>
       <p class="sub" data-i18n="hero.sub" data-i18n-html="1">
-        A private AI translator running on your own GPU, right inside the browser.<br/>
+        A private AI translator that runs entirely inside your browser.<br/>
         Confidential docs, personal notes, work messages — it even works offline.
       </p>
       <div class="pillars">
-        <span class="pill" data-i18n="hero.pill.gpu" data-i18n-html="1"><b>WebGPU</b> accelerated</span>
+        <span class="pill" data-i18n="hero.pill.local" data-i18n-html="1"><b>Local</b> inference</span>
         <span class="pill" data-i18n="hero.pill.offline" data-i18n-html="1"><b>Offline</b> capable</span>
         <span class="pill" data-i18n="hero.pill.zero" data-i18n-html="1"><b>0 bytes</b> sent to a server</span>
-        <span class="pill" data-i18n="hero.pill.langs" data-i18n-html="1"><b>200 languages</b> supported</span>
+        <span class="pill" data-i18n="hero.pill.langs" data-i18n-html="1"><b>100 languages</b> supported</span>
       </div>
     </header>
 
     <section class="card">
       <div class="toolbar">
         <select id="src">
-          <option value="eng_Latn">English</option>
-          <option value="kor_Hang">한국어</option>
-          <option value="jpn_Jpan">日本語</option>
-          <option value="zho_Hans">中文 (简)</option>
-          <option value="spa_Latn">Español</option>
-          <option value="fra_Latn">Français</option>
-          <option value="deu_Latn">Deutsch</option>
-          <option value="vie_Latn">Tiếng Việt</option>
+          <option value="en">English</option>
+          <option value="ko">한국어</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="ru">Русский</option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+          <option value="ar">العربية</option>
+          <option value="hi">हिन्दी</option>
         </select>
 
         <button class="swap-btn" id="swap" data-i18n-attr="title aria-label" data-i18n="ui.swap" title="Swap languages" aria-label="Swap languages">⇄</button>
 
         <select id="tgt">
-          <option value="kor_Hang">한국어</option>
-          <option value="eng_Latn">English</option>
-          <option value="jpn_Jpan">日本語</option>
-          <option value="zho_Hans">中文 (简)</option>
-          <option value="spa_Latn">Español</option>
-          <option value="fra_Latn">Français</option>
-          <option value="deu_Latn">Deutsch</option>
-          <option value="vie_Latn">Tiếng Việt</option>
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="ru">Русский</option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="it">Italiano</option>
+          <option value="pt">Português</option>
+          <option value="ar">العربية</option>
+          <option value="hi">हिन्दी</option>
         </select>
 
         <span class="grow"></span>
@@ -380,8 +390,8 @@
       </div>
       <div class="feat">
         <div class="icon">⚡</div>
-        <h3 data-i18n="feat.speed.title">WebGPU acceleration</h3>
-        <p data-i18n="feat.speed.desc">Runs directly on your computer's GPU. No round-trip latency to a server.</p>
+        <h3 data-i18n="feat.speed.title">No network round-trips</h3>
+        <p data-i18n="feat.speed.desc">After a one-time model download, every translation runs locally — no API calls, no waiting on a remote server.</p>
       </div>
       <div class="feat">
         <div class="icon">✈️</div>
@@ -392,7 +402,7 @@
 
     <footer class="foot">
       <p data-i18n="foot.line1" data-i18n-html="1">
-        Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU
+        Powered by Hugging Face <code>Transformers.js</code> · Meta M2M-100 (418M) · runs in your browser
       </p>
       <p data-i18n="foot.line2">This page contains zero analytics or tracking scripts.</p>
     </footer>
@@ -408,19 +418,17 @@ env.useBrowserCache = true;
 const STR = {
   en: {
     "meta.title": "Whisper Translate — 100% On-Device Translator",
-    "meta.desc": "Your text never leaves your browser. A private AI translator running on your GPU via WebGPU.",
+    "meta.desc": "Your text never leaves your browser. A private AI translator that runs entirely in your browser.",
     "hero.badge": "100% ON-DEVICE · 0 SERVERS",
     "hero.title.l1": "Your text",
     "hero.title.l2": "never leaves your browser.",
-    "hero.sub": "A private AI translator running on your own GPU, right inside the browser.<br/>Confidential docs, personal notes, work messages — it even works offline.",
-    "hero.pill.gpu": "<b>WebGPU</b> accelerated",
+    "hero.sub": "A private AI translator that runs entirely inside your browser.<br/>Confidential docs, personal notes, work messages — it even works offline.",
+    "hero.pill.local": "<b>Local</b> inference",
     "hero.pill.offline": "<b>Offline</b> capable",
     "hero.pill.zero": "<b>0 bytes</b> sent to a server",
-    "hero.pill.langs": "<b>200 languages</b> supported",
+    "hero.pill.langs": "<b>100 languages</b> supported",
     "ui.swap": "Swap languages",
-    "ui.deviceChecking": "Checking device…",
-    "ui.deviceGPU": "WebGPU accelerated",
-    "ui.deviceCPU": "CPU (WebGPU unavailable)",
+    "ui.deviceLabel": "Runs in your browser",
     "ui.input": "Input",
     "ui.output": "Translation",
     "ui.inputPlaceholder": "Type something to translate. This text never leaves your device.",
@@ -431,41 +439,40 @@ const STR = {
     "ui.copy": "Copy",
     "ui.copied": "Copied!",
     "ui.runLoading": "Loading model…",
-    "ui.runReady": "Translate (auto-loads model)",
+    "ui.runReady": "Translate",
     "ui.runDoing": "Translating…",
+    "ui.runDownloading": (pct) => `Downloading model… ${pct}%`,
     "ui.run": "Translate",
     "ui.preload": "Preload model",
-    "ui.statusInitial": "The model downloads once. After that it works without an internet connection.",
-    "ui.statusDownloading": "Downloading model… (one-time)",
-    "ui.statusProgress": (loaded, total) => `Downloading… ${loaded} MB / ${total} MB`,
+    "ui.statusInitial": "First click downloads the model (~610 MB, one time). After that it works offline forever.",
+    "ui.statusDownloading": "Downloading model… (one time)",
+    "ui.statusProgress": (loaded, total, pct) => `Downloading… ${loaded} MB / ${total} MB (${pct}%)`,
     "ui.statusReady": "Ready. From now on, your text never leaves this device.",
     "ui.statusError": (msg) => `Could not load the model: ${msg}`,
     "ui.retry": "Retry",
     "ui.latency": (ms) => `${ms} ms · local`,
     "feat.privacy.title": "Total privacy",
     "feat.privacy.desc": "Not a single character is sent over the network. Everything happens in your browser's memory.",
-    "feat.speed.title": "WebGPU acceleration",
-    "feat.speed.desc": "Runs directly on your computer's GPU. No round-trip latency to a server.",
+    "feat.speed.title": "No network round-trips",
+    "feat.speed.desc": "After a one-time model download, every translation runs locally — no API calls, no waiting on a remote server.",
     "feat.offline.title": "Works offline",
     "feat.offline.desc": "Once the model is cached, you can translate from a plane, a tunnel, or anywhere with no connection.",
-    "foot.line1": "Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU",
+    "foot.line1": "Powered by Hugging Face <code>Transformers.js</code> · Meta M2M-100 (418M) · runs in your browser",
     "foot.line2": "This page contains zero analytics or tracking scripts.",
   },
   ko: {
     "meta.title": "Whisper Translate — 100% 온디바이스 번역기",
-    "meta.desc": "당신의 글은 절대 서버로 전송되지 않습니다. 브라우저 안에서 GPU로 직접 돌아가는 프라이빗 AI 번역기.",
+    "meta.desc": "당신의 글은 절대 서버로 전송되지 않습니다. 브라우저 안에서 직접 돌아가는 프라이빗 AI 번역기.",
     "hero.badge": "100% ON-DEVICE · 서버 0대",
     "hero.title.l1": "당신의 문장은",
     "hero.title.l2": "절대 서버로 가지 않습니다.",
-    "hero.sub": "브라우저 안에서 당신의 GPU로 직접 돌아가는 프라이빗 AI 번역기.<br/>기밀 문서, 개인 일기, 회사 메시지 — 인터넷이 끊겨도 동작합니다.",
-    "hero.pill.gpu": "<b>WebGPU</b> 가속",
+    "hero.sub": "브라우저 안에서 완전히 로컬로 돌아가는 프라이빗 AI 번역기.<br/>기밀 문서, 개인 일기, 회사 메시지 — 인터넷이 끊겨도 동작합니다.",
+    "hero.pill.local": "<b>로컬</b> 추론",
     "hero.pill.offline": "<b>오프라인</b> 동작",
     "hero.pill.zero": "<b>0건</b> 서버 전송",
-    "hero.pill.langs": "<b>200개 언어</b> 지원",
+    "hero.pill.langs": "<b>100개 언어</b> 지원",
     "ui.swap": "언어 바꾸기",
-    "ui.deviceChecking": "디바이스 확인 중…",
-    "ui.deviceGPU": "WebGPU 가속",
-    "ui.deviceCPU": "CPU (WebGPU 미지원)",
+    "ui.deviceLabel": "브라우저에서 직접 실행",
     "ui.input": "입력",
     "ui.output": "번역",
     "ui.inputPlaceholder": "번역할 문장을 입력하세요. 이 글은 당신의 기기에서만 처리됩니다.",
@@ -476,24 +483,25 @@ const STR = {
     "ui.copy": "복사",
     "ui.copied": "복사됨!",
     "ui.runLoading": "모델 준비 중…",
-    "ui.runReady": "번역하기 (모델 자동 로드)",
+    "ui.runReady": "번역하기",
     "ui.runDoing": "번역 중…",
+    "ui.runDownloading": (pct) => `모델 다운로드 중… ${pct}%`,
     "ui.run": "번역하기",
     "ui.preload": "모델 미리 받기",
-    "ui.statusInitial": "처음 한 번만 모델을 다운로드하면, 이후로는 인터넷 없이도 동작합니다.",
+    "ui.statusInitial": "첫 클릭 시 모델을 다운로드합니다 (~610MB, 한 번만). 이후엔 영구적으로 오프라인에서 동작합니다.",
     "ui.statusDownloading": "모델을 다운로드 중입니다… (처음 한 번만)",
-    "ui.statusProgress": (loaded, total) => `다운로드 중… ${loaded}MB / ${total}MB`,
+    "ui.statusProgress": (loaded, total, pct) => `다운로드 중… ${loaded}MB / ${total}MB (${pct}%)`,
     "ui.statusReady": "준비 완료. 이제부터는 입력한 글이 절대 외부로 나가지 않습니다.",
     "ui.statusError": (msg) => `모델을 불러오지 못했습니다: ${msg}`,
     "ui.retry": "다시 시도",
     "ui.latency": (ms) => `${ms} ms · 로컬`,
     "feat.privacy.title": "완전한 프라이버시",
     "feat.privacy.desc": "입력한 문장은 네트워크로 단 한 글자도 나가지 않습니다. 브라우저 메모리 안에서만 처리됩니다.",
-    "feat.speed.title": "WebGPU 가속",
-    "feat.speed.desc": "당신 컴퓨터의 GPU를 직접 사용해 추론합니다. 서버 왕복 지연이 없습니다.",
+    "feat.speed.title": "네트워크 왕복 없음",
+    "feat.speed.desc": "한 번 모델을 다운로드한 뒤에는 모든 번역이 로컬에서 실행됩니다. API 호출도, 원격 서버 대기도 없습니다.",
     "feat.offline.title": "오프라인 동작",
     "feat.offline.desc": "모델을 한 번 받으면 비행기 모드에서도 그대로 번역할 수 있습니다.",
-    "foot.line1": "Powered by Hugging Face <code>Transformers.js</code> · NLLB-200 distilled · WebGPU",
+    "foot.line1": "Powered by Hugging Face <code>Transformers.js</code> · Meta M2M-100 (418M) · 브라우저에서 직접 실행",
     "foot.line2": "이 페이지에는 어떤 분석/추적 스크립트도 들어있지 않습니다.",
   },
 };
@@ -518,11 +526,12 @@ function applyI18n() {
       el.textContent = val;
     }
   });
-  // Re-render dynamic chrome
-  if (deviceTag.classList.contains("gpu")) deviceLabel.textContent = t("ui.deviceGPU");
-  else if (deviceTag.classList.contains("cpu")) deviceLabel.textContent = t("ui.deviceCPU");
+  // Device label is static now
+  deviceLabel.textContent = t("ui.deviceLabel");
   // Re-render run button if not actively translating / loading
-  if (!loading && !translating) {
+  if (loading) {
+    runBtn.textContent = t("ui.runDownloading", lastDownloadPct);
+  } else if (!translating) {
     runBtn.textContent = translator ? t("ui.run") : t("ui.runReady");
   }
   // Highlight active toggle
@@ -556,24 +565,30 @@ const latencyEl = $("latency");
 const copyBtn = $("copyBtn");
 const clearBtn = $("clearBtn");
 
+const MODEL_ID = "Xenova/m2m100_418M";
+
 let translator = null;
 let loading = false;
 let translating = false;
-let device = "wasm";
+let lastDownloadPct = 0;
 
-// ====== WebGPU detection ======
-async function detectDevice() {
-  try {
-    if (!("gpu" in navigator)) throw new Error("no webgpu");
-    const adapter = await navigator.gpu.requestAdapter();
-    if (!adapter) throw new Error("no adapter");
-    device = "webgpu";
-    deviceTag.classList.add("gpu");
-    deviceLabel.textContent = t("ui.deviceGPU");
-  } catch (e) {
-    device = "wasm";
-    deviceTag.classList.add("cpu");
-    deviceLabel.textContent = t("ui.deviceCPU");
+// Aggregate per-file download progress into a single percentage
+const downloadProgress = new Map(); // file -> {loaded, total}
+
+function reportProgress() {
+  let loaded = 0, total = 0;
+  for (const v of downloadProgress.values()) {
+    loaded += v.loaded || 0;
+    total += v.total || 0;
+  }
+  if (total > 0) {
+    const pct = Math.min(100, Math.round((loaded / total) * 100));
+    lastDownloadPct = pct;
+    progressBar.style.width = pct + "%";
+    const mb = (loaded / 1024 / 1024).toFixed(0);
+    const totalMb = (total / 1024 / 1024).toFixed(0);
+    status.textContent = t("ui.statusProgress", mb, totalMb, pct);
+    runBtn.textContent = t("ui.runDownloading", pct);
   }
 }
 
@@ -585,25 +600,30 @@ async function loadModel() {
   loadBtn.disabled = true;
   progressBox.classList.add("show");
   status.textContent = t("ui.statusDownloading");
+  runBtn.textContent = t("ui.runDownloading", 0);
+  downloadProgress.clear();
 
   try {
-    translator = await pipeline(
-      "translation",
-      "Xenova/nllb-200-distilled-600M",
-      {
-        device,
-        dtype: "q8",
-        progress_callback: (p) => {
-          if (p.status === "progress" && typeof p.progress === "number") {
-            progressBar.style.width = p.progress.toFixed(1) + "%";
-            const mb = p.loaded ? (p.loaded / 1024 / 1024).toFixed(1) : "0";
-            const total = p.total ? (p.total / 1024 / 1024).toFixed(1) : "?";
-            status.textContent = t("ui.statusProgress", mb, total);
+    translator = await pipeline("translation", MODEL_ID, {
+      device: "wasm",
+      dtype: "q8",
+      progress_callback: (p) => {
+        if (!p || !p.file) return;
+        if (p.status === "progress") {
+          downloadProgress.set(p.file, { loaded: p.loaded || 0, total: p.total || 0 });
+          reportProgress();
+        } else if (p.status === "done") {
+          // Mark file as fully loaded so the aggregate hits 100%
+          const cur = downloadProgress.get(p.file);
+          if (cur && cur.total) {
+            downloadProgress.set(p.file, { loaded: cur.total, total: cur.total });
           }
-        },
-      }
-    );
+          reportProgress();
+        }
+      },
+    });
     progressBar.style.width = "100%";
+    lastDownloadPct = 100;
     runBtn.disabled = false;
     runBtn.textContent = t("ui.run");
     loadBtn.style.display = "none";
@@ -694,12 +714,14 @@ document.querySelectorAll(".lang-toggle button").forEach((btn) => {
     if (stored && STR[stored]) initial = stored;
     else if ((navigator.language || "").toLowerCase().startsWith("ko")) initial = "ko";
   } catch {}
-  // Pick sensible default source/target based on language
-  if (initial === "ko") { srcSel.value = "kor_Hang"; tgtSel.value = "eng_Latn"; }
-  else { srcSel.value = "eng_Latn"; tgtSel.value = "kor_Hang"; }
+  // Pick sensible default source/target based on UI language
+  if (initial === "ko") { srcSel.value = "ko"; tgtSel.value = "en"; }
+  else { srcSel.value = "en"; tgtSel.value = "ko"; }
+
+  // Device tag is now a static "running locally" indicator
+  deviceTag.classList.add("gpu");
 
   setLang(initial);
-  await detectDevice();
   runBtn.disabled = false;
   runBtn.textContent = t("ui.runReady");
 })();
